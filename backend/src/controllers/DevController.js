@@ -3,7 +3,7 @@ const Dev = require('../models/Dev');
 const parseStringAsArray = require('../utils/parseStringAsArray');
 
 module.exports = {
-    async index(request, response){
+    async index(request, response) {
         const devs = await Dev.find();
 
         return response.json(devs);
@@ -27,7 +27,7 @@ module.exports = {
                 coordinates: [longitude, latitude],
             };
 
-            const dev = await Dev.create({
+            dev = await Dev.create({
                 github_username,
                 name,
                 avatar_url,
@@ -39,5 +39,19 @@ module.exports = {
 
         return response.json(dev);
 
+    },
+
+    async delete(request, response) {
+        const { github_username } = request.query;
+
+        let dev = await Dev.findOne({ github_username });
+
+        if (!dev) {
+            return response.json({ message: "Dev não existe!" });
+        }
+
+        dev.delete();
+
+        return response.json({ message: "Usuario excluido com sucesso" });
     }
 }
