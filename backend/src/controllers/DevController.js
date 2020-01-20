@@ -41,6 +41,23 @@ module.exports = {
 
     },
 
+    async update(request, response){
+        const {github_username} = request.query;
+
+        let dev = await Dev.findOne({github_username});
+
+        if (!dev) {
+            return response.json({ message: "Dev não existe!" });
+        }
+
+        dev.name = request.body.name;
+        dev.bio = request.body.bio;  
+        dev.save();  
+        
+        return response.json(dev);
+
+    },
+
     async delete(request, response) {
         const { github_username } = request.query;
 
